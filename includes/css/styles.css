@@ -1,0 +1,79 @@
+@charset "UTF-8"
+
+.questions a {
+  color: #000;
+  /*display:table;*/
+}
+
+.questions a:hover {
+  text-decoration: none;
+  vertical-align: middle;
+}
+
+.questions a:hover div {
+  background-color: #ddd;
+}
+
+.questions a div {
+  padding-top:50px;
+  text-align: center;
+  height:150px;
+  vertical-align: middle;
+  float: left;
+}
+
+.questions.holland a div {
+  padding-top:20px;
+  text-align: center;
+  height:150px;
+  vertical-align: middle;
+}
+
+.questions a div.index_0 {
+  background-color: #333;
+}
+
+.questions a div.index_1 {
+  background-color: #444;
+}
+
+.questions a div.index_2 {
+  background-color: #555;
+}
+
+.questions a div.index_3 {
+  background-color: #666;
+}
+
+.questions a:hover div {
+  background-color: red;
+}
+
+.questions a.selected div {
+  pointer-events: none;
+  cursor: default;
+  background-color: #ccc;
+}
+
+.current_step_num {
+  color:red;
+  font-size: 2.2em;
+}
+
+.questions .vs_mark {
+  position: absolute;
+  width: 36px;
+  left: 50%;
+  margin-left: -18px;
+  top: 50%;
+  margin-top: 29px;
+}
+
+.questions .vs_mark img {
+  width:100%;
+}
+
+.step_num {
+    color: red;
+    font-size: 2.2em;
+}
