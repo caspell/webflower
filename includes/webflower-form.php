@@ -15,7 +15,10 @@ class WebFlower_Form {
 	private $locale;
 
 	private $qcount;
+	private $rcount;
+
 	private $questions;
+	private $results;
 
 	private $properties = array();
 	private $responses_count = 0;
@@ -121,13 +124,23 @@ class WebFlower_Form {
 			$this->locale = get_post_meta( $post->ID, '_locale', true );
 			$this->qcount = get_post_meta( $post->ID, '_qcount', true );
 
+			$this->rcount = get_post_meta( $post->ID, '_rcount', true );
 			$this->questions = array();
+			$this->results = array();
 
 			for ($i = 0 ; $i < $this->qcount ; $i++) {
 				$this->questions[] = array(
 					'qscore' => get_post_meta( $post->ID, '_qscore_' . $i, true),
 					'q1' => get_post_meta( $post->ID, '_q1_' . $i, true),
 					'q2' => get_post_meta( $post->ID, '_q2_' . $i, true),
+				);
+			}
+
+			for ($i = 0 ; $i < $this->rcount ; $i++) {
+				$this->results[] = array(
+					'rmessage' => get_post_meta( $post->ID, '_rmessage_' . $i, true),
+					'r1' => (int)get_post_meta( $post->ID, '_r1_' . $i, true),
+					'r2' => (int)get_post_meta( $post->ID, '_r2_' . $i, true),
 				);
 			}
 
@@ -184,10 +197,23 @@ class WebFlower_Form {
 	public function qcount() {
 		return $this->qcount;
 	}
+	public function rcount() {
+		return $this->rcount;
+	}
+
 
 	public function questions() {
 		return $this->questions;
 	}
+
+	public function results() {
+		return $this->results;
+	}
+
+	public function resultsToJson() {
+		return json_encode($this->results, JSON_FORCE_OBJECT);
+	}
+
 
 	public function prop( $name ) {
 		$props = $this->get_properties();

@@ -87,6 +87,8 @@ for ($i = 0 ; $i < $qcount ; $i++) {
                 });
 
             });
+
+            return _self;
         }
         , choose:function(index, score, is_ok, is_last){
             var _self = this;
@@ -97,11 +99,26 @@ for ($i = 0 ; $i < $qcount ; $i++) {
                 .next().show();
             }
         }
+        , result:function(){
+            var _self = this;
+
+            var rcount = parseInt('<?php echo $post->rcount(); ?>');
+            $json = JSON.parse('<?php echo $post->resultsToJson(); ?>')
+
+            for (i = 0 ; i < rcount ; i++){
+                var $obj = $json[i];
+
+                if (($obj.r1 <= _self.total_score) && (_self.total_score < $obj.r2)) {
+                        location.href=$obj.rmessage;
+                        break;
+                }
+            }
+
+        }
         , done :function(){
             var _self = this;
 
-            alert('is last ' + _self.total_score);
-
+            _self.result();
         }
     }).init();
 

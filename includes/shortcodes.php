@@ -15,7 +15,6 @@ function webflower_func( $atts, $content = null, $code = '' ) {
     );
 
     $id = (int) $atts['id'];
-    $title = trim( $atts['title'] );
 
     $flower = WebFlower_Form::get_instance( $id );
 

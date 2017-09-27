@@ -72,7 +72,12 @@ function webflower_set_screen_options( $result, $option, $value ) {
 
 add_action( 'admin_enqueue_scripts', 'webflower_admin_enqueue_scripts' );
 
+add_action( 'admin_denqueue_style', 'webflower_admin_denqueue_style' );
+
 function webflower_admin_enqueue_scripts($hook_suffix){
+
+	wp_dequeue_style('web-flowform-front-bootstrap');
+
     if ( false === strpos( $hook_suffix, 'webflower' ) ) {
         return;
     }
@@ -190,6 +195,53 @@ function fnc_webflower_admin_add_new_page() {
 
 }
 
+function webflower_save_form($post_id, $args){
+
+	$subtitle = $args['subtitle'];
+	$qcount = (int)$args['qcount'];
+
+	$qscores = $args['qscore'];
+
+	$q1s = $args['q1'];
+	$q2s = $args['q2'];
+
+	$rcount = (int)$args['rcount'];
+	$rmessages = $args['rmessage'];
+	$r1s = $args['r1'];
+	$r2s = $args['r2'];
+
+	$metas = get_post_meta( $post_id );
+
+	foreach($metas as $key=>$value)  {
+		delete_post_meta($post_id, $key);
+	}
+
+	if (!add_post_meta($post_id, '_subtitle', $subtitle, true)) {
+		update_post_meta( $post_id, '_' . '_subtitle', $subtitle );
+	}
+
+	if (!add_post_meta($post_id, '_qcount', $qcount, true)) {
+		update_post_meta( $post_id, '_' . '_qcount', $qcount );
+	}
+
+	for ($i = 0 ; $i < $qcount ; $i++){
+		add_post_meta($post_id, '_qscore_'. $i, $qscores[$i]);
+		add_post_meta($post_id, '_q1_'. $i, _normalize_newline_deep($q1s[$i]));
+		add_post_meta($post_id, '_q2_'. $i, _normalize_newline_deep($q2s[$i]));
+	}
+
+	if (!add_post_meta($post_id, '_rcount', $rcount, true)) {
+		update_post_meta( $post_id, '_' . '_rcount', $rcount );
+	}
+
+	for ($i = 0 ; $i < $rcount ; $i++){
+		add_post_meta($post_id, '_rmessage_'. $i, $rmessages[$i]);
+		add_post_meta($post_id, '_r1_'. $i, $r1s[$i]);
+		add_post_meta($post_id, '_r2_'. $i, $r2s[$i]);
+	}
+
+}
+
 function webflower_load_admin() {
 	global $plugin_page;
 
@@ -205,14 +257,6 @@ function webflower_load_admin() {
 		}
 
 		$args = $_REQUEST;
-
-		$subtitle = $args['subtitle'];
-		$qcount = (int)$args['qcount'];
-		$qscores = $args['qscore'];
-
-		$q1s = $args['q1'];
-		$q2s = $args['q2'];
-
 
 		$args = wp_parse_args( $args, array(
 			'id' => -1,
@@ -231,24 +275,7 @@ function webflower_load_admin() {
 				'post_title' => $args['post_title'],
 			) );
 
-			$metas = get_post_meta( $post_id );
-
-			if (!add_post_meta($post_id, '_subtitle', $subtitle, true)) {
-				update_post_meta( $post_id, '_' . '_subtitle', $subtitle );
-			}
-
-			if (!add_post_meta($post_id, '_qcount', $qcount, true)) {
-				update_post_meta( $post_id, '_' . '_qcount', $qcount );
-			}
-
-			for ($i = 0 ; $i < $qcount ; $i++){
-				$qscore = $qscores[$i];
-				$q1 = $q1s[$i];
-				$q2 = $q2s[$i];
-				add_post_meta($post_id, '_qscore_'. $i, $qscore);
-				add_post_meta($post_id, '_q1_'. $i, _normalize_newline_deep($q1));
-				add_post_meta($post_id, '_q2_'. $i, _normalize_newline_deep($q2));
-			}
+			webflower_save_form($post_id, $args);
 
 			$query['id'] = $post_id;
 
@@ -260,28 +287,7 @@ function webflower_load_admin() {
 				'post_title' => $args['post_title'],
 			) );
 
-			$metas = get_post_meta( $post_id );
-
-			foreach($metas as $key=>$value)  {
-				delete_post_meta($post_id, $key);
-			}
-
-			if (!add_post_meta($post_id, '_subtitle', $subtitle, true)) {
-				update_post_meta( $post_id, '_' . '_subtitle', $subtitle );
-			}
-
-			if (!add_post_meta($post_id, '_qcount', $qcount, true)) {
-				update_post_meta( $post_id, '_' . '_qcount', $qcount );
-			}
-
-			for ($i = 0 ; $i < $qcount ; $i++){
-				$qscore = $qscores[$i];
-				$q1 = $q1s[$i];
-				$q2 = $q2s[$i];
-				add_post_meta($post_id, '_qscore_'. $i, $qscore);
-				add_post_meta($post_id, '_q1_'. $i, _normalize_newline_deep($q1));
-				add_post_meta($post_id, '_q2_'. $i, _normalize_newline_deep($q2));
-			}
+			webflower_save_form($post_id, $args);
 
 			$query['id'] = $post_id;
 
@@ -297,13 +303,15 @@ function webflower_load_admin() {
 
 		if ( ! empty( $_POST['post_ID'] ) ) {
 			check_admin_referer( 'webflower-delete-form_' . $_POST['post_ID'] );
+			$pid = $_POST['post_ID'];
 		} elseif ( ! is_array( $_REQUEST['post'] ) ) {
 			check_admin_referer( 'webflower-delete-form_' . $_REQUEST['post'] );
+			$pid = $_REQUEST['post'];
 		}
 
 		$query = array();
 
-		if ( wp_delete_post( $this->id, true ) ) {
+		if ( wp_delete_post( $pid, true ) ) {
 			$id = 0;
 			$query['deleted'] = true;
 		} else {

@@ -28,11 +28,17 @@ function webflower_init() {
 		array( 'jquery', 'jquery-ui-tabs' ),
 		WEBFLOWER_VERSION, true );
 // 'boostrap'
+	// wp_enqueue_style( 'web-flowform-front-bootstrap',
+	// 	webflower_plugin_url( 'includes/bootstrap/css/bootstrap.min.css' ),
+	// 	array( ),
+	// 	WEBFLOWER_VERSION, 'all' );
+
 	wp_enqueue_style( 'web-flowform-front-bootstrap',
 		webflower_plugin_url( 'includes/bootstrap/css/bootstrap.min.css' ),
 		array( ),
 		WEBFLOWER_VERSION, 'all' );
-	//
+
+
 	// wp_enqueue_script( 'web-flowform-bootstrap',
 	// 	webflower_plugin_url( 'includes/bootstrap/js/popper.js' ),
 	// 	array(  ),

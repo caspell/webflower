@@ -127,26 +127,26 @@ class WebFlower_List_Table extends WP_List_Table {
 		);
 
 		$output = sprintf( '<strong>%s</strong>', $output );
+		//
+		// $actions = array(
+		// 	'edit' => sprintf( '<a href="%1$s">%2$s</a>',
+		// 		esc_url( $edit_link ),
+		// 		esc_html( __( 'Edit', 'webflower' ) ) ) );
+		//
+		// if ( current_user_can( 'webflower_edit_webflow', $item->id() ) ) {
+		// 	$copy_link = wp_nonce_url(
+		// 		add_query_arg( array( 'action' => 'copy' ), $url ),
+		// 		'webflower-copy-form_' . absint( $item->id() ) );
+		//
+		// 	$actions = array_merge( $actions, array(
+		// 		'copy' => sprintf( '<a href="%1$s">%2$s</a>',
+		// 			esc_url( $copy_link ),
+		// 			esc_html( __( 'Duplicate', 'webflower' ) )
+		// 		),
+		// 	) );
+		// }
 
-		$actions = array(
-			'edit' => sprintf( '<a href="%1$s">%2$s</a>',
-				esc_url( $edit_link ),
-				esc_html( __( 'Edit', 'webflower' ) ) ) );
-
-		if ( current_user_can( 'webflower_edit_webflow', $item->id() ) ) {
-			$copy_link = wp_nonce_url(
-				add_query_arg( array( 'action' => 'copy' ), $url ),
-				'webflower-copy-form_' . absint( $item->id() ) );
-
-			$actions = array_merge( $actions, array(
-				'copy' => sprintf( '<a href="%1$s">%2$s</a>',
-					esc_url( $copy_link ),
-					esc_html( __( 'Duplicate', 'webflower' ) )
-				),
-			) );
-		}
-
-		$output .= $this->row_actions( $actions );
+		// $output .= $this->row_actions( $actions );
 
 		return $output;
 	}

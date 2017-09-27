@@ -64,7 +64,7 @@ if ( $post ) :
 $qcount = $post->qcount();
 
 if ( $qcount > 0 ) {
-	$dummystyle = 'display:none;';
+	$questionDummyStyle = 'display:none;';
 }
 
 ?>
@@ -78,7 +78,7 @@ if ( $qcount > 0 ) {
 <input type="hidden" id="post_ID" name="post_ID" value="<?php echo (int) $post_id; ?>" />
 <input type="hidden" id="webflower-locale" name="webflower-locale" value="<?php echo esc_attr( $post->locale() ); ?>" />
 <input type="hidden" id="hiddenaction" name="action" value="save" />
-<input type="hidden" id="qcount" name="qcount" value="<?php echo $qcount; ?>" />
+
 
 <div id="poststuff">
 <div id="post-body" class="metabox-holder columns-2">
@@ -136,16 +136,20 @@ if ( $qcount > 0 ) {
 
 <div id="minor-publishing-actions">
 
-<div class="hidden">
-	<input type="submit" class="button-primary" name="webflower-save" value="<?php echo esc_attr( __( 'Save', 'webflower' ) ); ?>" />
-</div>
+	<div class="hidden">
+		<input type="submit" class="button-primary" name="webflower-save" value="<?php echo esc_attr( __( 'Save', 'webflower' ) ); ?>" />
+	</div>
+	<!--
+	<?php
+		if ( ! $post->initial() ) :
+			$copy_nonce = wp_create_nonce( 'webflower-copy-webflower_' . $post_id );
+	?>
+		<input type="submit" name="webflower-copy" class="copy button" value="<?php echo esc_attr( __( 'Duplicate', 'webflower' ) ); ?>" <?php echo "onclick=\"this.form._wpnonce.value = '$copy_nonce'; this.form.action.value = 'copy'; return true;\""; ?> />
+	<?php
+	endif;
+	?>
+	-->
 
-<?php
-	if ( ! $post->initial() ) :
-		$copy_nonce = wp_create_nonce( 'webflower-copy-webflower_' . $post_id );
-?>
-	<input type="submit" name="webflower-copy" class="copy button" value="<?php echo esc_attr( __( 'Duplicate', 'webflower' ) ); ?>" <?php echo "onclick=\"this.form._wpnonce.value = '$copy_nonce'; this.form.action.value = 'copy'; return true;\""; ?> />
-<?php endif; ?>
 </div><!-- #minor-publishing-actions -->
 
 <div id="misc-publishing-actions">
@@ -178,7 +182,7 @@ if ( $qcount > 0 ) {
 	<h3><?php echo esc_html( __( 'Information', 'webflower' ) ); ?></h3>
 	<div class="inside">
 		<ul>
-			<li><?php echo 'test1'; ?></li>
+			<li><?php echo 'first, create page and that Shortcode write to page content area.'; ?></li>
 		</ul>
 	</div>
 </div><!-- #informationdiv -->
@@ -187,15 +191,6 @@ if ( $qcount > 0 ) {
 
 <div id="postbox-container-2" class="postbox-container">
 <div id="webflow-editor" class="rows">
-	<script id="question-template" type="jquery/x-template">
-	<tr>
-		<th class="qnumber">{{num}}</th>
-		<td><input type="text" name="qscore[]" value="" class="td-100 question-score" /></td>
-		<td><input type="text" name="q1[]" value="" class="td-100 question-q1" /></td>
-		<td><input type="text" name="q2[]" value="" class="td-100 question-q2" /></td>
-		<td><button type="button" class="btn-danger row-delete">X</button></td>
-	</tr>
-	</script>
 
 	<div class=" webflow-editor-panel " id="question-subtitle" aria-labelledby="ui-id-3" role="tabpanel" aria-hidden="false" style="display: block;margin-bottom:20px;">
 		<label for="subtitle" class="large-text">Subtitle<br/>
@@ -216,6 +211,16 @@ if ( $qcount > 0 ) {
 	</div>
 
 	<div class="webflow-editor-panel" id="question-panel" aria-labelledby="ui-id-3" role="tabpanel" aria-hidden="false" style="display: block;">
+		<input type="hidden" id="qcount" name="qcount" value="<?php echo $qcount; ?>" />
+		<script id="row-template" type="jquery/x-template">
+		<tr>
+			<th class="qnumber">{{num}}</th>
+			<td><input type="text" name="qscore[]" value="" class="td-100 question-score" /></td>
+			<td><input type="text" name="q1[]" value="" class="td-100 question-q1" /></td>
+			<td><input type="text" name="q2[]" value="" class="td-100 question-q2" /></td>
+			<td><button type="button" class="btn-danger row-delete">X</button></td>
+		</tr>
+		</script>
 		<div class="config-error"></div>
 		<h2>Questions <input id="btn_add" type="button" class="button-primary" value="Add"></h2>
 		<table id="question" class="wp-list-table table widefat fixed striped">
@@ -236,7 +241,7 @@ if ( $qcount > 0 ) {
 				</tr>
 			</thead>
 			<tbody>
-				<tr class='dummy' style='<?php echo $dummystyle; ?>'>
+				<tr class='dummy' style='<?php echo $questionDummyStyle; ?>'>
 					<td colspan="5">please add item</td>
 				</tr>
 
@@ -253,35 +258,100 @@ if ( $qcount > 0 ) {
 			</tbody>
 		</table>
 	</div>
+<?php
+
+$rcount = $post->rcount();
+
+if ( $rcount > 0 ) {
+	$resultDummyStyle = 'display:none;';
+}
+
+?>
+	<div class="webflow-editor-panel" id="result-panel" aria-labelledby="ui-id-3" role="tabpanel" aria-hidden="false" style="display: block;margin-top:20px;">
+		<input type="hidden" id="rcount" name="rcount" value="<?php echo $rcount; ?>" />
+		<script id="row-template" type="jquery/x-template">
+		<tr>
+			<th class="qnumber">{{num}}</th>
+			<td><input type="text" name="r1[]" value="0" class="td-100 result_range" /></td>
+			<td>~</td>
+			<td><input type="text" name="r2[]" value="0" class="td-100 result_range" /></td>
+			<td><input type="text" name="rmessage[]" value="" class="td-100 result_message" /></td>
+			<td><button type="button" class="btn-danger row-delete">X</button></td>
+		</tr>
+		</script>
+		<div class="config-error"></div>
+		<h2>Result <input id="btn_add" type="button" class="button-primary" value="Add"></h2>
+		<table id="result" class="wp-list-table table widefat fixed striped">
+			<colgroup>
+				<col width="3%" />
+				<col width="10%" />
+				<col width="2%" />
+				<col width="10%" />
+				<col width="70%" />
+				<col width="5%" />
+			</colgroup>
+			<thead>
+				<tr>
+					<th>#</th>
+					<th colspan="3">score range</th>
+					<th>result message</th>
+					<th>-</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr class='dummy' style='<?php echo $resultDummyStyle; ?>'>
+					<td colspan="6">please add result</td>
+				</tr>
+
+				<?php $i = 0;foreach ( $post->results() as $item)  { ?>
+				<tr>
+					<th class="qnumber"><?php echo ++$i; ?></th>
+					<td><input type="text" name="r1[]" value="<?php echo $item['r1'];?>" class="td-100 result_range" /></td>
+					<td>~</td>
+					<td><input type="text" name="r2[]" value="<?php echo $item['r2'];?>" class="td-100 result_range" /></td>
+					<td><input type="text" name="rmessage[]" value="<?php echo $item['rmessage'];?>" class="td-100 result_message" /></td>
+					<td><button type="button" class="btn-danger row-delete">X</button></td>
+				</tr>
+				<?php } ?>
+
+			</tbody>
+		</table>
+	</div>
 
 <script type="text/javascript">
 (function($){
 
-	function recount_number(){
-		var $rows = $("#question tbody tr:not(.dummy)");
-		var length = $rows.length + 1
+	var qrControl = (function($container, counter){
 
-		$("#qcount").val($rows.length);
-		$rows.find(".qnumber").each(function(i, o){
-			$(this).text(i + 1);
+		var $table = $container.find("table:first tbody");
+
+		$container.find("#btn_add").click(function(){
+			var row = $container.find("#row-template").html();
+			var $rows = $table.find("tr:not(.dummy)");
+			$table.find("tr.dummy").hide();
+			var length = $rows.length + 1;
+			row = row.replace('{{num}}', length);
+
+			$container.find(counter).val(length);
+			$table.append(row);
 		});
-	}
 
-	$("#btn_add").click(function(){
-		var row = $("#question-template").html();
-		var $rows = $("#question tbody tr:not(.dummy)");
-		$("#question tbody tr.dummy").hide();
-		var length = $rows.length + 1;
-		row = row.replace('{{num}}', length);
+		$container.delegate(".row-delete", "click", function(){
+			$(this).closest('tr').remove();
+			var $rows = $table.find("tr:not(.dummy)");
+			var length = $rows.length + 1
 
-		$("#qcount").val(length);
-		$("#question tbody").append(row);
+
+			$container.find(counter).val($rows.length);
+
+			$rows.find(".qnumber").each(function(i, o){
+				$(this).text(i + 1);
+			});
+		});
 	});
 
-	$("#webflow-editor").delegate(".row-delete", "click", function(){
-		$(this).closest('tr').remove();
-		recount_number();
-	});
+	qrControl($("#question-panel"), "#qcount");
+	qrControl($("#result-panel"), "#rcount");
 
 })(jQuery);
 </script>
