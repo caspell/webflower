@@ -160,7 +160,7 @@ if ( $qcount > 0 ) {
 
 <?php
 	if ( ! $post->initial() ) :
-		$delete_nonce = wp_create_nonce( 'webflower-delete-webflower_' . $post_id );
+		$delete_nonce = wp_create_nonce( 'webflower-delete-form_' . $post_id );
 ?>
 <div id="delete-action">
 	<input type="submit" name="webflower-delete" class="delete submitdelete" value="<?php echo esc_attr( __( 'Delete', 'webflower' ) ); ?>" <?php echo "onclick=\"if (confirm('" . esc_js( __( "You are about to delete this Web Flower.\n  'Cancel' to stop, 'OK' to delete.", 'webflower' ) ) . "')) {this.form._wpnonce.value = '$delete_nonce'; this.form.action.value = 'delete'; return true;} return false;\""; ?> />
@@ -215,7 +215,7 @@ if ( $qcount > 0 ) {
 		<script id="row-template" type="jquery/x-template">
 		<tr>
 			<th class="qnumber">{{num}}</th>
-			<td><input type="text" name="qscore[]" value="" class="td-100 question-score" /></td>
+			<td><input type="text" name="qscore[]" value="0" class="td-100 question-score" /></td>
 			<td><input type="text" name="q1[]" value="" class="td-100 question-q1" /></td>
 			<td><input type="text" name="q2[]" value="" class="td-100 question-q2" /></td>
 			<td><button type="button" class="btn-danger row-delete">X</button></td>
@@ -245,15 +245,21 @@ if ( $qcount > 0 ) {
 					<td colspan="5">please add item</td>
 				</tr>
 
-				<?php $i = 0;foreach ( $post->questions() as $item)  { ?>
-				<tr>
-					<th class="qnumber"><?php echo ++$i; ?></th>
-					<td><input type="text" name="qscore[]" value="<?php echo $item['qscore'];?>" class="td-100 question-score" /></td>
-					<td><input type="text" name="q1[]" value="<?php echo $item['q1'];?>" class="td-100 question-q1" /></td>
-					<td><input type="text" name="q2[]" value="<?php echo $item['q2'];?>" class="td-100 question-q2" /></td>
-					<td><button type="button" class="btn-danger row-delete">X</button></td>
-				</tr>
-				<?php } ?>
+				<?php
+				if ($post->qcount()>0) {
+					$i = 0;foreach ( $post->questions() as $item)  {
+					?>
+					<tr>
+						<th class="qnumber"><?php echo ++$i; ?></th>
+						<td><input type="text" name="qscore[]" value="<?php echo $item['qscore'];?>" class="td-100 question-score" /></td>
+						<td><input type="text" name="q1[]" value="<?php echo $item['q1'];?>" class="td-100 question-q1" /></td>
+						<td><input type="text" name="q2[]" value="<?php echo $item['q2'];?>" class="td-100 question-q2" /></td>
+						<td><button type="button" class="btn-danger row-delete">X</button></td>
+					</tr>
+					<?php
+					}
+				}
+				?>
 
 			</tbody>
 		</table>
@@ -300,61 +306,29 @@ if ( $rcount > 0 ) {
 			</thead>
 			<tbody>
 				<tr class='dummy' style='<?php echo $resultDummyStyle; ?>'>
-					<td colspan="6">please add result</td>
+					<td colspan="6" style="text-align:center;">please add result</td>
 				</tr>
 
-				<?php $i = 0;foreach ( $post->results() as $item)  { ?>
-				<tr>
-					<th class="qnumber"><?php echo ++$i; ?></th>
-					<td><input type="text" name="r1[]" value="<?php echo $item['r1'];?>" class="td-100 result_range" /></td>
-					<td>~</td>
-					<td><input type="text" name="r2[]" value="<?php echo $item['r2'];?>" class="td-100 result_range" /></td>
-					<td><input type="text" name="rmessage[]" value="<?php echo $item['rmessage'];?>" class="td-100 result_message" /></td>
-					<td><button type="button" class="btn-danger row-delete">X</button></td>
-				</tr>
-				<?php } ?>
+				<?php
+				if ($post->rcount()>0) {
+					$i = 0;foreach ( $post->results() as $item)  {
+					?>
+					<tr>
+						<th class="qnumber"><?php echo ++$i; ?></th>
+						<td><input type="text" name="r1[]" value="<?php echo $item['r1'];?>" class="td-100 result_range" /></td>
+						<td>~</td>
+						<td><input type="text" name="r2[]" value="<?php echo $item['r2'];?>" class="td-100 result_range" /></td>
+						<td><input type="text" name="rmessage[]" value="<?php echo $item['rmessage'];?>" class="td-100 result_message" /></td>
+						<td><button type="button" class="btn-danger row-delete">X</button></td>
+					</tr>
+					<?php
+					}
+				}
+				?>
 
 			</tbody>
 		</table>
 	</div>
-
-<script type="text/javascript">
-(function($){
-
-	var qrControl = (function($container, counter){
-
-		var $table = $container.find("table:first tbody");
-
-		$container.find("#btn_add").click(function(){
-			var row = $container.find("#row-template").html();
-			var $rows = $table.find("tr:not(.dummy)");
-			$table.find("tr.dummy").hide();
-			var length = $rows.length + 1;
-			row = row.replace('{{num}}', length);
-
-			$container.find(counter).val(length);
-			$table.append(row);
-		});
-
-		$container.delegate(".row-delete", "click", function(){
-			$(this).closest('tr').remove();
-			var $rows = $table.find("tr:not(.dummy)");
-			var length = $rows.length + 1
-
-
-			$container.find(counter).val($rows.length);
-
-			$rows.find(".qnumber").each(function(i, o){
-				$(this).text(i + 1);
-			});
-		});
-	});
-
-	qrControl($("#question-panel"), "#qcount");
-	qrControl($("#result-panel"), "#rcount");
-
-})(jQuery);
-</script>
 
 </div><!-- #webflower-editor -->
 

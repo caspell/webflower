@@ -285,49 +285,7 @@ class WebFlower_Form {
 		}
 	}
 
-
-	/* Save */
-	//
-	// public function save() {
-	// 	$props = $this->get_properties();
-	//
-	// 	$post_content = implode( "\n", webflower_array_flatten( $props ) );
-	//
-	// 	if ( $this->initial() ) {
-	// 		$post_id = wp_insert_post( array(
-	// 			'post_type' => self::post_type,
-	// 			'post_status' => 'publish',
-	// 			'post_title' => $this->title,
-	// 			'post_content' => trim( $post_content ),
-	// 		) );
-	//
-	// 	} else {
-	//
-	// 		$post_id = wp_update_post( array(
-	// 			'ID' => (int) $this->id,
-	// 			'post_status' => 'publish',
-	// 			'post_title' => $this->title,
-	// 			'post_content' => trim( $post_content ),
-	// 		) );
-	// 	}
-	//
-	// 	if ( $post_id ) {
-	// 		// add_post_meta
-	// 		foreach ( $props as $prop => $value ) {
-	// 			update_post_meta( $post_id, '_' . $prop, wpcf7_normalize_newline_deep( $value ) );
-	// 		}
-	//
-	// 	}
-	//
-	// 	return $post_id;
-	// }
-
-
 	public function form_html( $args = '' ) {
-
-		// print_r($this->id);
-		//
-		// print_r($this->questions);
 
 		$post = $this;
 
@@ -379,12 +337,12 @@ class WebFlower_Form {
 			$old_unit_id = (int) get_post_meta( $this->id, '_old_wf_unit_id', true );
 
 			if ( $old_unit_id ) {
-				$shortcode = sprintf( '[webflower %1$d "%2$s"]', $old_unit_id, $title );
+				$shortcode = sprintf( '[webflower %1$d]', $old_unit_id);
 			} else {
 				$shortcode = '';
 			}
 		} else {
-			$shortcode = sprintf( '[webflower id="%1$d" title="%2$s"]', $this->id, $title );
+			$shortcode = sprintf( '[webflower id="%1$d"]', $this->id);
 		}
 
 		return apply_filters( 'webflower_shortcode', $shortcode, $args, $this );

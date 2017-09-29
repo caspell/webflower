@@ -137,46 +137,6 @@ function fnc_webflower_admin_management_page() {
 
 	require_once WEBFLOWER_PLUGIN_DIR . '/admin/flow-list.php';
 
-	$list_table = new WebFlower_List_Table();
-	$list_table->prepare_items();
-
-	?>
-	<div class="wrap">
-
-	<h1 class="wp-heading-inline"><?php
-		echo esc_html( __( 'Web Flows', 'webflower' ) );
-	?></h1>
-
-	<?php
-		if ( current_user_can( 'webflower_edit_webflow' ) ) {
-			echo sprintf( '<a href="%1$s" class="add-new-h2">%2$s</a>',
-				esc_url( menu_page_url( 'webflower-new', false ) ),
-				esc_html( __( 'Add New', 'webflower' ) ) );
-		}
-
-		if ( ! empty( $_REQUEST['s'] ) ) {
-			echo sprintf( '<span class="subtitle">'
-				. __( 'Search results for &#8220;%s&#8221;', 'webflower' )
-				. '</span>', esc_html( $_REQUEST['s'] ) );
-		}
-	?>
-
-	<hr class="wp-header-end">
-
-	<?php do_action( 'webflower_admin_warnings' ); ?>
-
-	<?php do_action( 'webflower_admin_notices' ); ?>
-
-	<form method="get" action="">
-		<input type="hidden" name="page" value="<?php echo esc_attr( $_REQUEST['page'] ); ?>" />
-		<?php $list_table->search_box( __( 'Search WebFlower', 'webflower' ), 'webflower' ); ?>
-		<?php $list_table->display(); ?>
-	</form>
-
-	</div>
-
-	<?php
-
 }
 
 
@@ -309,13 +269,29 @@ function webflower_load_admin() {
 			$pid = $_REQUEST['post'];
 		}
 
+		$posts = empty( $_POST['post_ID'] )
+				? (array) $_REQUEST['post']
+				: (array) $_POST['post_ID'];
+
+		$deleted = 0;
+
+		foreach ( $posts as $post ) {
+
+			if ( ! current_user_can( 'webflower_delete_webflow', $post ) ) {
+				wp_die( __( 'You are not allowed to delete this item.', 'webflower' ) );
+			}
+
+			if ( !wp_delete_post( $post, true ) ) {
+				wp_die( __( 'Error in deleting.', 'webflower' ) );
+			}
+
+			$deleted += 1;
+		}
+
 		$query = array();
 
-		if ( wp_delete_post( $pid, true ) ) {
-			$id = 0;
-			$query['deleted'] = true;
-		} else {
-			$query['deleted'] = false;
+		if ( ! empty( $deleted ) ) {
+			$query['message'] = 'deleted';
 		}
 
 		$redirect_to = add_query_arg( $query, menu_page_url( 'webflower', false ) );
