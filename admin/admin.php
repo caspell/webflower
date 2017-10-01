@@ -148,6 +148,8 @@ function webflower_save_form($post_id, $args){
 	$r1s = $args['r1'];
 	$r2s = $args['r2'];
 
+	$result_type = $args['result_type'];
+
 	$metas = get_post_meta( $post_id );
 
 	foreach($metas as $key=>$value)  {
@@ -160,6 +162,10 @@ function webflower_save_form($post_id, $args){
 
 	if (!add_post_meta($post_id, '_qcount', $qcount, true)) {
 		update_post_meta( $post_id, '_' . '_qcount', $qcount );
+	}
+
+	if (!add_post_meta($post_id, '_result_type', $result_type, true)) {
+		update_post_meta( $post_id, '_' . '_result_type', $result_type );
 	}
 
 	for ($i = 0 ; $i < $qcount ; $i++){

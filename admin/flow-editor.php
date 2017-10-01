@@ -63,9 +63,9 @@ if ( $post ) :
 
 $qcount = $post->qcount();
 
-if ( $qcount > 0 ) {
-	$questionDummyStyle = 'display:none;';
-}
+$questionDummyStyle = $qcount > 0 ? 'display:none;' : '';
+
+$result_type = $post->result_type();
 
 ?>
 
@@ -208,6 +208,12 @@ if ( $qcount > 0 ) {
 		echo sprintf( '<input class="large-text" %s />', webflower_format_atts( $subposttitle_atts ) );
 	?>
 		</label>
+		<label for="result_type" class="large-text">Result Type<br/>
+			<select id="result_type" name="result_type">
+				<option value='link' <?php echo $result_type == 'link' ? "selected='selected'" : ''; ?>>link</option>
+				<option value='html' <?php echo $result_type == 'html' ? "selected='selected'" : ''; ?>>html</option>
+			</select>
+		</label>
 	</div>
 
 	<div class="webflow-editor-panel" id="question-panel" aria-labelledby="ui-id-3" role="tabpanel" aria-hidden="false" style="display: block;">
@@ -268,9 +274,7 @@ if ( $qcount > 0 ) {
 
 $rcount = $post->rcount();
 
-if ( $rcount > 0 ) {
-	$resultDummyStyle = 'display:none;';
-}
+$resultDummyStyle = $rcount > 0 ?  'display:none;' : '';
 
 ?>
 	<div class="webflow-editor-panel" id="result-panel" aria-labelledby="ui-id-3" role="tabpanel" aria-hidden="false" style="display: block;margin-top:20px;">
@@ -318,7 +322,7 @@ if ( $rcount > 0 ) {
 						<td><input type="text" name="r1[]" value="<?php echo $item['r1'];?>" class="td-100 result_range" /></td>
 						<td>~</td>
 						<td><input type="text" name="r2[]" value="<?php echo $item['r2'];?>" class="td-100 result_range" /></td>
-						<td><input type="text" name="rmessage[]" value="<?php echo $item['rmessage'];?>" class="td-100 result_message" /></td>
+						<td><textarea name="rmessage[]" class="td-100 result_message"><?php echo $item['rmessage'];?></textarea></td>
 						<td><button type="button" class="btn-danger row-delete">X</button></td>
 					</tr>
 					<?php

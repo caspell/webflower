@@ -20,6 +20,10 @@ class WebFlower_Form {
 	private $questions;
 	private $results;
 
+	private $result_type;
+	private $total_score;
+	private $answer_index;
+
 	private $properties = array();
 	private $responses_count = 0;
 	private $shortcode_atts = array();
@@ -128,6 +132,8 @@ class WebFlower_Form {
 			$this->questions = array();
 			$this->results = array();
 
+			$this->result_type = get_post_meta( $post->ID, '_result_type', true );
+
 			for ($i = 0 ; $i < $this->qcount ; $i++) {
 				$this->questions[] = array(
 					'qscore' => get_post_meta( $post->ID, '_qscore_' . $i, true),
@@ -197,13 +203,18 @@ class WebFlower_Form {
 	public function qcount() {
 		return $this->qcount;
 	}
+
 	public function rcount() {
 		return $this->rcount;
 	}
 
-
 	public function questions() {
 		return $this->questions;
+	}
+
+	public function result_type() {
+		return !$this->result_type || $this->result_type == '' ? 'link' : $this->result_type;
+		// return $this->result_type;
 	}
 
 	public function results() {
@@ -258,6 +269,18 @@ class WebFlower_Form {
 		return $this->subtitle;
 	}
 
+	public function total_score(){
+		return $this->total_score;
+	}
+
+	public function set_total_score($total_score) {
+		$this->total_score = $total_score;
+	}
+
+	public function get_answer() {
+		return $this->results()[$this->answer_index];
+	}
+
 	public function set_title( $title ) {
 		$title = strip_tags( $title );
 		$title = trim( $title );
@@ -294,6 +317,52 @@ class WebFlower_Form {
 		return $args;
 
     }
+
+	public function select_index(){
+		$post = $this;
+
+        $results = $post->results();
+
+		$total_score = $this->total_score();
+
+        $answer_index = 0;
+
+		for ($i = 0 ; $i < $post->rcount() ; $i++){
+            $obj = $results[$i];
+            if (($obj['r1'] <= $total_score) && ($total_score < $obj['r2'])) {
+                $answer_index = $i;
+                break;
+            }
+        }
+
+		$this->answer_index = $answer_index;
+
+		return $answer_index;
+
+	}
+
+	public function answer_json( ) {
+
+        $answer_index = $this->select_index();
+
+        $result_message = $this->results()[$answer_index]['rmessage'];
+
+        return json_encode(array(
+	            'result_type' => $result_type,
+	            'contents' => $result_message));
+
+	}
+
+	public function answer_html( ) {
+
+		$this->select_index();
+
+		$post = $this;
+
+		require_once WEBFLOWER_PLUGIN_DIR . '/includes/templates/answers.php';
+
+    }
+
 
     private function form_hidden_fields() {
 		$hidden_fields = array(

@@ -7,7 +7,12 @@ $qcount = $post->qcount;
 $title = $post->title();
 
 $subtitle = $post->subtitle();
+
+$result_type = $post->result_type();
+
 ?>
+
+<div id="question-area">
 
 <div class="row">
     <div class="col-sm-12">
@@ -57,6 +62,7 @@ for ($i = 0 ; $i < $qcount ; $i++) {
 }
 ?>
 </div>
+</div>
 
 <script type="text/javascript">
 function _void(){}
@@ -102,17 +108,21 @@ function _void(){}
         , result:function(){
             var _self = this;
 
-            var rcount = parseInt('<?php echo $post->rcount(); ?>');
-            $json = JSON.parse('<?php echo $post->resultsToJson(); ?>')
+            var result_type = '<?php echo $post->result_type(); ?>';
 
-            for (i = 0 ; i < rcount ; i++){
-                var $obj = $json[i];
-
-                if (($obj.r1 <= _self.total_score) && (_self.total_score < $obj.r2)) {
-                        location.href=$obj.rmessage;
-                        break;
+            $.post(ajaxurl, {
+                action:'question_answer'
+                , post:'<?php echo $post->ID(); ?>'
+                , total_score:_self.total_score
+            }, function(response) {
+                if (result_type == 'link') {
+                    var $json = JSON.parse(response);
+                    location.href=$json['contents'];
+                } else {
+                    $("#question-area").html(response);
+                    // console.log(response);
                 }
-            }
+            });
 
         }
         , done :function(){

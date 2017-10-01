@@ -35,8 +35,24 @@
 		});
 	});
 
-	qrControl($("#question-panel"), "#qcount");
-	qrControl($("#result-panel"), "#rcount");
+	$(document).ready(function(){
 
+		qrControl($("#question-panel"), "#qcount");
+		qrControl($("#result-panel"), "#rcount");
+		//
+		// $("#result_type").change(function(){
+		// 	var $result_message = $(".result_message");
+		// 	console.log($result_message);
+		// 	if ( $(this).val() == 'link') {
+		// 		$result_message.each(function(){
+		// 			$(this).replaceWith('<input>');
+		// 		});
+		// 	} else {
+		// 		$result_message.each(function(){
+		// 			$(this).replaceWith('<textarea>');
+		// 		});
+		// 	}
+		// });
+	});
 
 } )( jQuery );

@@ -5,6 +5,7 @@ require_once WEBFLOWER_PLUGIN_DIR . '/includes/shortcodes.php';
 require_once WEBFLOWER_PLUGIN_DIR . '/includes/webflower-template.php';
 require_once WEBFLOWER_PLUGIN_DIR . '/includes/webflower-form.php';
 require_once WEBFLOWER_PLUGIN_DIR . '/includes/capabilities.php';
+require_once WEBFLOWER_PLUGIN_DIR . '/includes/ajax/actions.php';
 
 if ( is_admin() ) {
 	require_once WEBFLOWER_PLUGIN_DIR . '/admin/admin.php';
@@ -63,6 +64,8 @@ function webflower() {
 
 	/* Shortcodes */
 	add_shortcode( 'webflower', 'webflower_func' );
+
+	add_shortcode( 'webflower-answer', 'webflower_answer_func' );
 
 }
 
