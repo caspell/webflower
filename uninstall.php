@@ -6,15 +6,15 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 
 
 
-// function wpcf7_delete_plugin() {
+// function webflower_delete_plugin() {
 // 	global $wpdb;
 //
-// 	delete_option( 'wpcf7' );
+// 	delete_option( 'webflower' );
 //
 // 	$posts = get_posts(
 // 		array(
 // 			'numberposts' => -1,
-// 			'post_type' => 'wpcf7_contact_form',
+// 			'post_type' => 'webflower',
 // 			'post_status' => 'any',
 // 		)
 // 	);
@@ -23,8 +23,6 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 // 		wp_delete_post( $post->ID, true );
 // 	}
 //
-// 	$wpdb->query( sprintf( "DROP TABLE IF EXISTS %s",
-// 		$wpdb->prefix . 'contact_form_7' ) );
 // }
 //
-// wpcf7_delete_plugin();
+// webflower_delete_plugin();

@@ -1,24 +1,4 @@
 <?php
-/*
-add_menu_page( $page_title, $menu_title, $capability, $menu_slug, $function, $icon_url, $position );
-add_submenu_page( $parent_slug, $page_title, $menu_title, $capability, $menu_slug, $function );
-
-// positions
-2 Dashboard
-4 Separator
-5 Posts
-10 Media
-15 Links
-20 Pages
-25 Comments
-59 Separator
-60 Appearance
-65 Plugins
-70 Users
-75 Tools
-80 Settings
-99 Separator
-*/
 
 add_action('admin_menu', 'webflower_admin_menu');
 
