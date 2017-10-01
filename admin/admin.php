@@ -129,7 +129,6 @@ function fnc_webflower_admin_management_page() {
 	if ($post = webflower_get_current_form()) {
 		$post_id = $post->initial() ? -1 : $post->id();
 
-		require_once WEBFLOWER_PLUGIN_DIR . '/admin/includes/editor.php';
 		require_once WEBFLOWER_PLUGIN_DIR . '/admin/flow-editor.php';
 
 		return;
@@ -150,7 +149,6 @@ function fnc_webflower_admin_add_new_page() {
 
 	$post_id = -1;
 
-	require_once WEBFLOWER_PLUGIN_DIR . '/admin/includes/editor.php';
 	require_once WEBFLOWER_PLUGIN_DIR . '/admin/flow-editor.php';
 
 }

@@ -25,7 +25,7 @@ $subtitle = $post->subtitle();
 
 <?php
 
-$imagepath = '/wp-content/plugins/webflower/includes/images/quiz_vs.png';
+// $imagepath = '/wp-content/plugins/webflower/includes/images/quiz_vs.png';
 $questions = $post->questions();
 for ($i = 0 ; $i < $qcount ; $i++) {
     $number = $i + 1;
@@ -43,11 +43,11 @@ for ($i = 0 ; $i < $qcount ; $i++) {
 
         <div class="questions-item">
             <input type="hidden" id="qscore" value="<?php echo $qscore; ?>" />
-            <a class="question-item1" href="#">
-                <div class="col-md-6 index_0"><h4 style="color:#fff;"><p><?php echo $q1; ?></p> </h4></div>
+            <a class="question-item1" href="javascript:_void;">
+                <div class="col-md-6 index_0"><h4 style="color:#fff;"><p style="color:#fff;"><?php echo $q1; ?></p> </h4></div>
         	</a>
-            <a class="question-item2" href="#">
-                <div class="col-md-6 index_1"><h4 style="color:#fff;"><p><?php echo $q2; ?></p> </h4></div>
+            <a class="question-item2" href="javascript:_void();">
+                <div class="col-md-6 index_1"><h4 style="color:#fff;"><p style="color:#fff;"><?php echo $q2; ?></p> </h4></div>
             </a>
             <div class="vs_mark"><img src="<?php echo $imagepath; ?>" alt=""></div>
         </div>
@@ -59,7 +59,7 @@ for ($i = 0 ; $i < $qcount ; $i++) {
 </div>
 
 <script type="text/javascript">
-
+function _void(){}
 (function($){
 
     ({

@@ -211,7 +211,7 @@ class WebFlower_Form {
 	}
 
 	public function resultsToJson() {
-		return json_encode($this->results, JSON_FORCE_OBJECT);
+		return json_encode($this->results);
 	}
 
 
